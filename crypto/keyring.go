@@ -104,6 +104,38 @@ func (keyRing *KeyRing) Unlock(passphrase []byte) error {
 	return nil
 }
 
+// IsLocked checks if a keyring is fully locked
+func (keyRing *KeyRing) IsLocked() bool {
+	for _, entity := range keyRing.entities {
+		if entity.PrivateKey.Encrypted {
+			continue // Key still encrypted
+		}
+		return false
+	}
+	return true
+}
+
+// IsUnlocked checks if a keyring is fully unlocked
+func (keyRing *KeyRing) IsUnlocked() bool {
+	for _, entity := range keyRing.entities {
+		if !entity.PrivateKey.Encrypted {
+			continue // Key already decrypted
+		}
+		return false
+	}
+	return true
+}
+
+// CountEntities returns the number of entities in the keyring
+func (keyRing *KeyRing) CountEntities() int {
+	return len(keyRing.GetEntities())
+}
+
+// CountDecryptionEntities returns the number of entities in the keyring
+func (keyRing *KeyRing) CountDecryptionEntities() int {
+	return len(keyRing.GetEntities().DecryptionKeys())
+}
+
 // UnlockWithPassphrase is a wrapper for Unlock that uses strings
 func (keyRing *KeyRing) UnlockWithPassphrase(passphrase string) error {
 	return keyRing.Unlock([]byte(passphrase))
