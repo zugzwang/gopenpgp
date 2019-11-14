@@ -136,6 +136,10 @@ func (keyRing *KeyRing) CountDecryptionEntities() int {
 	return len(keyRing.GetEntities().DecryptionKeys())
 }
 
+func (keyRing *KeyRing) TestVariadic(test ...[]byte) int {
+	return len(test)
+}
+
 // UnlockWithPassphrase is a wrapper for Unlock that uses strings
 func (keyRing *KeyRing) UnlockWithPassphrase(passphrase string) error {
 	return keyRing.Unlock([]byte(passphrase))
